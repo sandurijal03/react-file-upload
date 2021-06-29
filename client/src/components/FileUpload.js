@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Message from './Message';
 
 const FileUpload = () => {
   const [file, setFile] = useState('');
   const [uploadedFile, setUploadedFile] = useState({});
+  const [message, setMessage] = useState('');
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
@@ -23,17 +25,19 @@ const FileUpload = () => {
 
       const { fileName, filePath } = res.data;
       setUploadedFile({ fileName, filePath });
+      setMessage('file uploaded');
     } catch (err) {
       if (err.response.status === 500) {
-        console.log('there was problem with server');
+        setMessage('there was problem with server');
       } else {
-        console.log(err.response.data.msg);
+        setMessage(err.response.data.msg);
       }
     }
   };
 
   return (
     <>
+      {message ? <Message msg={message} /> : null}
       <form onSubmit={onSubmit}>
         <div className='text-center'>
           <label htmlFor='formFileLg' className='form-label w-100'>
